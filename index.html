@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prashant Pawar — .NET Full-Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#050510;
+  --bg2:#0a0a1a;
+  --cyan:#00f5ff;
+  --blue:#0066ff;
+  --purple:#7b2fff;
+  --white:#f0f0ff;
+  --muted:#6b7280;
+  --card:#0d0d20;
+  --border:rgba(0,245,255,0.12);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;cursor:none;}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:12px;height:12px;background:var(--cyan);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.1s;mix-blend-mode:difference;}
+.cursor-trail{position:fixed;width:32px;height:32px;border:1px solid var(--cyan);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.15s ease;opacity:0.4;}
+
+/* CANVAS */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 4rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,16,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Space Mono',monospace;font-size:0.9rem;color:var(--cyan);letter-spacing:0.1em;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;font-family:'Space Mono',monospace;}
+.nav-links a:hover{color:var(--cyan);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:0 4rem;position:relative;z-index:1;}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;}
+.hero-tag{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero h1{font-size:clamp(3.5rem,7vw,7rem);font-weight:800;line-height:0.95;margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.4s forwards;}
+.hero h1 .line2{color:transparent;-webkit-text-stroke:1px var(--cyan);}
+.hero-sub{font-family:'Space Mono',monospace;font-size:0.9rem;color:var(--muted);max-width:500px;line-height:1.8;margin-bottom:3rem;opacity:0;animation:fadeUp 0.8s 0.6s forwards;}
+.hero-sub span{color:var(--cyan);}
+.hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s 0.8s forwards;}
+.btn-primary{padding:0.9rem 2.5rem;background:var(--cyan);color:var(--bg);font-family:'Space Mono',monospace;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;font-weight:700;transition:all 0.3s;clip-path:polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);}
+.btn-primary:hover{background:var(--white);transform:translateY(-2px);}
+.btn-outline{padding:0.9rem 2.5rem;border:1px solid var(--cyan);color:var(--cyan);font-family:'Space Mono',monospace;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;}
+.btn-outline:hover{background:rgba(0,245,255,0.08);}
+.hero-stats{display:flex;gap:3rem;margin-top:5rem;opacity:0;animation:fadeUp 0.8s 1s forwards;}
+.stat-item{text-align:left;}
+.stat-num{font-size:2.5rem;font-weight:800;color:var(--cyan);line-height:1;}
+.stat-label{font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:0.3rem;}
+
+/* SECTIONS */
+section{padding:7rem 4rem;position:relative;z-index:1;}
+.container{max-width:1100px;margin:0 auto;}
+.section-tag{font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.8rem;}
+.section-title{font-size:clamp(2rem,4vw,3.5rem);font-weight:800;color:var(--white);line-height:1.1;margin-bottom:4rem;}
+.section-title span{color:transparent;-webkit-text-stroke:1px rgba(0,245,255,0.4);}
+
+/* SKILLS */
+#skills{background:var(--bg2);}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5px;background:var(--border);}
+.skill-card{background:var(--card);padding:2rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--blue));transform:scaleX(0);transition:transform 0.3s;}
+.skill-card:hover::before{transform:scaleX(1);}
+.skill-card:hover{background:#101028;}
+.skill-cat{font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem;}
+.skill-list{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.skill-tag{padding:0.35rem 0.9rem;background:rgba(0,245,255,0.06);border:1px solid rgba(0,245,255,0.15);font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--white);transition:all 0.3s;}
+.skill-tag:hover{background:rgba(0,245,255,0.15);border-color:var(--cyan);color:var(--cyan);}
+
+/* AI PATH */
+.ai-section{background:linear-gradient(135deg,rgba(0,245,255,0.03),rgba(123,47,255,0.03));}
+.ai-roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--border);}
+.ai-step{background:var(--card);padding:2rem;position:relative;}
+.ai-step-num{font-size:3rem;font-weight:800;color:rgba(0,245,255,0.08);line-height:1;margin-bottom:1rem;font-family:'Space Mono',monospace;}
+.ai-step h3{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:0.5rem;}
+.ai-step p{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);line-height:1.7;}
+.ai-step.active{background:#0d1a2a;}
+.ai-step.active .ai-step-num{color:rgba(0,245,255,0.2);}
+.ai-badge{display:inline-block;padding:0.2rem 0.7rem;background:rgba(0,245,255,0.1);border:1px solid var(--cyan);font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.8rem;}
+
+/* EXPERIENCE */
+.exp-list{display:flex;flex-direction:column;gap:1.5px;background:var(--border);}
+.exp-card{background:var(--card);padding:2.5rem;display:grid;grid-template-columns:200px 1fr;gap:3rem;align-items:start;transition:background 0.3s;}
+.exp-card:hover{background:#101028;}
+.exp-period{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--cyan);line-height:1.6;}
+.exp-company{font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:0.3rem;}
+.exp-role{font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--muted);margin-bottom:1rem;}
+.exp-tech{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.2rem;}
+.tech-badge{padding:0.2rem 0.7rem;background:rgba(0,102,255,0.1);border:1px solid rgba(0,102,255,0.3);font-family:'Space Mono',monospace;font-size:0.62rem;color:#6699ff;}
+.exp-points{list-style:none;}
+.exp-points li{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--muted);line-height:1.7;padding-left:1.2rem;position:relative;margin-bottom:0.5rem;}
+.exp-points li::before{content:'▸';position:absolute;left:0;color:var(--cyan);}
+
+/* PROJECTS */
+#projects{background:var(--bg2);}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5px;background:var(--border);}
+.project-card{background:var(--card);padding:2.5rem;position:relative;overflow:hidden;transition:all 0.3s;}
+.project-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple));transform:scaleX(0);transform-origin:left;transition:transform 0.4s;}
+.project-card:hover::after{transform:scaleX(1);}
+.project-card:hover{background:#101028;}
+.project-num{font-family:'Space Mono',monospace;font-size:0.65rem;color:rgba(0,245,255,0.3);margin-bottom:1.5rem;letter-spacing:0.1em;}
+.project-title{font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:0.8rem;line-height:1.2;}
+.project-desc{font-family:'Space Mono',monospace;font-size:0.73rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem;}
+.project-stack{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.stack-item{padding:0.25rem 0.7rem;background:rgba(123,47,255,0.1);border:1px solid rgba(123,47,255,0.25);font-family:'Space Mono',monospace;font-size:0.62rem;color:#b388ff;}
+
+/* CONTACT */
+.contact-inner{text-align:center;max-width:600px;margin:0 auto;}
+.contact-quote{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:3rem;}
+.contact-quote span{color:var(--cyan);}
+.contact-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+.contact-link{padding:0.8rem 2rem;border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 0.3s;}
+.contact-link:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* FOOTER */
+footer{padding:2rem 4rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+footer p{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);}
+footer span{color:var(--cyan);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  .hero{padding:7rem 1.5rem 4rem;}
+  section{padding:5rem 1.5rem;}
+  .exp-card{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:0.5rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PP // DEV</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#ai">AI Path</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-inner">
+    <div class="hero-tag">Available for opportunities · Pune, Maharashtra</div>
+    <h1>Prashant<br/><span class="line2">Pawar</span></h1>
+    <p class="hero-sub">
+      <span>.NET Full-Stack Developer</span> · 2+ years building enterprise ERP systems,
+      real-time access control platforms & multi-role web portals.
+      ASP.NET Core · Angular · React.js · SQL Server · IIS
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="mailto:aaryan100m@gmail.com" class="btn-outline">Get In Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">2+</div>
+        <div class="stat-label">Years Exp</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Systems Built</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5K+</div>
+        <div class="stat-label">Users Served</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Tech Stacks</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-tag reveal">Technical Arsenal</div>
+    <div class="section-title reveal">Skills & <span>Tech Stack</span></div>
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <div class="skill-cat">Backend</div>
+        <div class="skill-list">
+          <span class="skill-tag">C#</span>
+          <span class="skill-tag">ASP.NET Core</span>
+          <span class="skill-tag">ASP.NET Framework</span>
+          <span class="skill-tag">Web API</span>
+          <span class="skill-tag">WPF</span>
+          <span class="skill-tag">REST API</span>
+          <span class="skill-tag">JWT Auth</span>
+          <span class="skill-tag">RBAC</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Frontend</div>
+        <div class="skill-list">
+          <span class="skill-tag">Angular</span>
+          <span class="skill-tag">React.js</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
+          <span class="skill-tag">Bootstrap</span>
+          <span class="skill-tag">RxJS</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Database</div>
+        <div class="skill-list">
+          <span class="skill-tag">SQL Server</span>
+          <span class="skill-tag">Stored Procedures</span>
+          <span class="skill-tag">Query Optimization</span>
+          <span class="skill-tag">Indexing</span>
+          <span class="skill-tag">Schema Design</span>
+          <span class="skill-tag">SSMS</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Deployment & DevOps</div>
+        <div class="skill-list">
+          <span class="skill-tag">IIS</span>
+          <span class="skill-tag">Windows Server</span>
+          <span class="skill-tag">ARR Proxy</span>
+          <span class="skill-tag">URL Rewrite</span>
+          <span class="skill-tag">VPS</span>
+          <span class="skill-tag">FileZilla</span>
+          <span class="skill-tag">PM2</span>
+          <span class="skill-tag">GitHub</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Hardware Integration</div>
+        <div class="skill-list">
+          <span class="skill-tag">RFID</span>
+          <span class="skill-tag">ANPR Camera SDK</span>
+          <span class="skill-tag">Fingerprint SDK</span>
+          <span class="skill-tag">UHF Reader</span>
+          <span class="skill-tag">Barcode</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Tools & Reporting</div>
+        <div class="skill-list">
+          <span class="skill-tag">Visual Studio</span>
+          <span class="skill-tag">Postman</span>
+          <span class="skill-tag">Crystal Reports</span>
+          <span class="skill-tag">ClosedXML</span>
+          <span class="skill-tag">SignalR</span>
+          <span class="skill-tag">Swagger</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="section-tag reveal">Work History</div>
+    <div class="section-title reveal">Professional <span>Experience</span></div>
+    <div class="exp-list reveal">
+      <div class="exp-card">
+        <div class="exp-period">Oct 2025 – Present<br/><br/>IDS ID SMART TECH<br/>Pvt. Ltd.<br/>Pune</div>
+        <div>
+          <div class="exp-company">.NET Full-Stack Developer</div>
+          <div class="exp-role">Enterprise Access Control & ERP Systems</div>
+          <div class="exp-tech">
+            <span class="tech-badge">ASP.NET Core</span>
+            <span class="tech-badge">Angular</span>
+            <span class="tech-badge">React.js</span>
+            <span class="tech-badge">SQL Server</span>
+            <span class="tech-badge">IIS</span>
+            <span class="tech-badge">RFID</span>
+            <span class="tech-badge">ANPR</span>
+          </div>
+          <ul class="exp-points">
+            <li>Built Township Management System covering residents, tenants, guests, visitors, service providers & vehicles with real-time entry/exit dashboards</li>
+            <li>Developed 5-role RBAC (Admin, Security, Resident, Management, Service Provider) — permissions enforced at API middleware layer with JWT</li>
+            <li>Integrated ANPR camera SDK for automated vehicle plate detection — zero-touch gate access with timestamped logs to SQL Server</li>
+            <li>Implemented RFID ID card access control for residents and staff, eliminating manual checkpoint verification</li>
+            <li>Built ID Card Printing Portal with 3-tier role model: Super Admin, School Admin, Parents with configurable card templates</li>
+            <li>Deployed all applications on Windows Server via IIS — configured ARR Reverse Proxy, URL Rewrite, and SSL bindings</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-period">Jun 2024 – Oct 2025<br/><br/>SunRayz Technology<br/>Pune</div>
+        <div>
+          <div class="exp-company">Software Developer</div>
+          <div class="exp-role">School ERP & Desktop Applications</div>
+          <div class="exp-tech">
+            <span class="tech-badge">C#</span>
+            <span class="tech-badge">ASP.NET Framework</span>
+            <span class="tech-badge">WPF</span>
+            <span class="tech-badge">SQL Server</span>
+            <span class="tech-badge">Crystal Reports</span>
+            <span class="tech-badge">JavaScript</span>
+          </div>
+          <ul class="exp-points">
+            <li>Developed & maintained School ERP deployed across 10+ schools used by 5,000+ users — Accounts, HR & Payroll, Attendance, Exams, Admissions</li>
+            <li>Built WPF desktop application for student management, fee collection, receipt generation & attendance recording</li>
+            <li>Implemented automated fee calculation engine with configurable structures — reduced manual billing effort by 40%</li>
+            <li>Built payroll module handling salary computation, PF/ESI deductions, arrear adjustments & payslip generation for 200+ staff</li>
+            <li>Designed 15+ Crystal Reports (report cards, fee ledgers, salary statements) with PDF/Excel export</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-tag reveal">Portfolio</div>
+    <div class="section-title reveal">Key <span>Projects</span></div>
+    <div class="projects-grid reveal">
+      <div class="project-card">
+        <div class="project-num">01 / PROJECT</div>
+        <div class="project-title">Township Management System</div>
+        <div class="project-desc">End-to-end platform for township access control — residents, tenants, guests, visitors, employees & vehicles. ANPR camera + RFID integration. Live in production multi-building township.</div>
+        <div class="project-stack">
+          <span class="stack-item">ASP.NET Core</span>
+          <span class="stack-item">Angular</span>
+          <span class="stack-item">SQL Server</span>
+          <span class="stack-item">IIS</span>
+          <span class="stack-item">ANPR SDK</span>
+          <span class="stack-item">RFID</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">02 / PROJECT</div>
+        <div class="project-title">ID Card Printing Portal</div>
+        <div class="project-desc">Multi-role portal — Super Admin manages all schools, School Admin imports students via Excel, Parents apply for ID cards, Admin triggers print queue. JWT-secured with role-scoped API endpoints.</div>
+        <div class="project-stack">
+          <span class="stack-item">ASP.NET Core</span>
+          <span class="stack-item">React.js</span>
+          <span class="stack-item">SQL Server</span>
+          <span class="stack-item">IIS</span>
+          <span class="stack-item">JWT</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">03 / PROJECT</div>
+        <div class="project-title">School ERP System</div>
+        <div class="project-desc">Full-school ERP across 10+ schools — admissions, fee management, HR & payroll, attendance, exams & academics. Multi-branch architecture with 15+ Crystal Reports. 5,000+ active users.</div>
+        <div class="project-stack">
+          <span class="stack-item">C#</span>
+          <span class="stack-item">ASP.NET</span>
+          <span class="stack-item">WPF</span>
+          <span class="stack-item">SQL Server</span>
+          <span class="stack-item">Crystal Reports</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">04 / PROJECT</div>
+        <div class="project-title">Enterprise Payroll System</div>
+        <div class="project-desc">Clean Architecture payroll — process/approve/lock cycles, payslip PDF + email, loans, claims, leave, attendance, tax, 12+ reports, audit logs, roles & permissions with company-wise filtering.</div>
+        <div class="project-stack">
+          <span class="stack-item">ASP.NET Core 8</span>
+          <span class="stack-item">React 18</span>
+          <span class="stack-item">TypeScript</span>
+          <span class="stack-item">SQL Server</span>
+          <span class="stack-item">JWT</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">05 / PROJECT</div>
+        <div class="project-title">Labour Management System</div>
+        <div class="project-desc">Built for Nanded City — police verification PDF, fingerprint integration (NITGEN SDK), QR-based attendance with HMAC signing, AI admin chatbot via Google Gemini with 11 specialized tools.</div>
+        <div class="project-stack">
+          <span class="stack-item">ASP.NET Core 8</span>
+          <span class="stack-item">React 18</span>
+          <span class="stack-item">Fingerprint SDK</span>
+          <span class="stack-item">Gemini AI</span>
+          <span class="stack-item">SignalR</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">06 / PROJECT</div>
+        <div class="project-title">UniformMS</div>
+        <div class="project-desc">Uniform Management System — .NET 4.8 Web Forms, 28-table DB schema, Companies & Schools CRUD, full permission hierarchy (Company > School > Role > UserOverride), audit logging.</div>
+        <div class="project-stack">
+          <span class="stack-item">ASP.NET Web Forms</span>
+          <span class="stack-item">SQL Server</span>
+          <span class="stack-item">Bootstrap 5</span>
+          <span class="stack-item">BCrypt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI PATH -->
+<section id="ai" class="ai-section">
+  <div class="container">
+    <div class="section-tag reveal">Future Direction</div>
+    <div class="section-title reveal">Path to <span>AI Engineer</span></div>
+    <div class="ai-roadmap reveal">
+      <div class="ai-step active">
+        <div class="ai-badge">✓ Done</div>
+        <div class="ai-step-num">01</div>
+        <h3>AI Integration</h3>
+        <p>Google Gemini API, OpenRouter, AI chatbot with 11 tools in LMS project. Prompt engineering, tool calling.</p>
+      </div>
+      <div class="ai-step active">
+        <div class="ai-badge">✓ Done</div>
+        <div class="ai-step-num">02</div>
+        <h3>Backend AI APIs</h3>
+        <p>REST APIs serving AI features, .NET 8 Clean Architecture patterns applied to AI workflows.</p>
+      </div>
+      <div class="ai-step">
+        <div class="ai-badge">In Progress</div>
+        <div class="ai-step-num">03</div>
+        <h3>Python & ML</h3>
+        <p>Python fundamentals, NumPy, Pandas, Scikit-learn. Building ML models alongside .NET expertise.</p>
+      </div>
+      <div class="ai-step">
+        <div class="ai-badge">Next</div>
+        <div class="ai-step-num">04</div>
+        <h3>LLM & RAG</h3>
+        <p>LangChain, vector databases, RAG pipelines, fine-tuning models, building production AI apps.</p>
+      </div>
+      <div class="ai-step">
+        <div class="ai-badge">Goal</div>
+        <div class="ai-step-num">05</div>
+        <h3>AI Engineer</h3>
+        <p>Full-stack AI systems — .NET backend + React frontend + AI/ML core. Production-grade intelligent applications.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner reveal">
+      <div class="section-tag" style="text-align:center;">Let's Build Together</div>
+      <div class="contact-quote">Available for <span>freelance</span> & full-time <span>opportunities</span></div>
+      <div class="contact-links">
+        <a href="mailto:aaryan100m@gmail.com" class="contact-link">aaryan100m@gmail.com</a>
+        <a href="https://github.com/codexprashantpawar" target="_blank" class="contact-link">GitHub</a>
+        <a href="tel:+917499598429" class="contact-link">+91 7499598429</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <span>Prashant Pawar</span> — .NET Full-Stack Developer</p>
+  <p>Pune, Maharashtra · <span>github.com/codexprashantpawar</span></p>
+</footer>
+
+<script>
+// CUSTOM CURSOR
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx-6+'px';
+  cursor.style.top=my-6+'px';
+});
+function animTrail(){
+  tx+=(mx-tx)*0.12; ty+=(my-ty)*0.12;
+  trail.style.left=tx-16+'px';
+  trail.style.top=ty-16+'px';
+  requestAnimationFrame(animTrail);
+}
+animTrail();
+
+// 3D PARTICLE CANVAS
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+
+const particles=[];
+for(let i=0;i<120;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    z:Math.random()*1000,
+    vx:(Math.random()-0.5)*0.3,
+    vy:(Math.random()-0.5)*0.3,
+    vz:-0.5-Math.random()*0.5
+  });
+}
+
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=canvas.width/2, cy=canvas.height/2;
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.z+=p.vz;
+    if(p.z<1){p.z=1000; p.x=Math.random()*canvas.width; p.y=Math.random()*canvas.height;}
+    const scale=400/p.z;
+    const sx=cx+(p.x-cx)*scale;
+    const sy=cy+(p.y-cy)*scale;
+    const size=scale*1.5;
+    const alpha=Math.min(1,(1000-p.z)/800);
+    ctx.beginPath();
+    ctx.arc(sx,sy,size,0,Math.PI*2);
+    ctx.fillStyle=`rgba(0,245,255,${alpha*0.6})`;
+    ctx.fill();
+    // connect nearby
+    particles.forEach(p2=>{
+      const dx=sx-(cx+(p2.x-cx)*(400/p2.z));
+      const dy=sy-(cy+(p2.y-cy)*(400/p2.z));
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<80){
+        ctx.beginPath();
+        ctx.moveTo(sx,sy);
+        ctx.lineTo(cx+(p2.x-cx)*(400/p2.z),cy+(p2.y-cy)*(400/p2.z));
+        ctx.strokeStyle=`rgba(0,102,255,${(1-dist/80)*0.15*alpha})`;
+        ctx.lineWidth=0.5;
+        ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// SCROLL REVEAL
+const reveals=document.querySelectorAll('.reveal');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.1});
+reveals.forEach(r=>observer.observe(r));
+</script>
+</body>
+</html>
