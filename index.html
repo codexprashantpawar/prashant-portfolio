@@ -6,7 +6,7 @@
 <title>Prashant Pawar — .NET Full-Stack Developer</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none;}
 :root{
   --bg:#050510;
   --bg2:#0a0a1a;
@@ -563,6 +563,31 @@ function drawParticles(){
   requestAnimationFrame(drawParticles);
 }
 drawParticles();
+
+// WATERMARK OVERLAY
+const wm=document.createElement('div');
+wm.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999;opacity:0.045;overflow:hidden;';
+const wmText='codexprashantpawar.github.io  ·  Prashant Pawar  ·  ';
+let wmHTML='';
+for(let i=0;i<200;i++){wmHTML+=`<span style="position:absolute;left:${Math.random()*100}%;top:${Math.random()*100}%;transform:rotate(-35deg);white-space:nowrap;font-family:monospace;font-size:13px;color:#00f5ff;">${wmText}</span>`;}
+wm.innerHTML=wmHTML;
+document.body.appendChild(wm);
+
+// PROTECTION
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('selectstart',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if(e.key==='F12'){e.preventDefault();e.stopPropagation();return false;}
+  if(e.ctrlKey&&['u','U','s','S','a','A','c','C','p','P'].includes(e.key)){e.preventDefault();}
+  if(e.ctrlKey&&e.shiftKey&&['I','J','C','i','j','c'].includes(e.key)){e.preventDefault();}
+},true);
+setInterval(()=>{
+  if(window.outerWidth-window.innerWidth>160||window.outerHeight-window.innerHeight>160){
+    document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#050510;color:#00f5ff;font-family:monospace;font-size:1.5rem;gap:1rem;"><div>⛔ Access Denied</div><div style="font-size:0.8rem;color:#666;">Developer tools are not allowed</div></div>';
+  }
+},300);
+setInterval(()=>{(function(){}).constructor('debugger')();},100);
 
 // SCROLL REVEAL
 const reveals=document.querySelectorAll('.reveal');
